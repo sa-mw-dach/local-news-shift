@@ -1,6 +1,7 @@
 # Table of contents
 
-* [Background: The Local News Application](README.md)
+* [Introduction](README.md)
+* [Background: The Local News Application](<README (1).md>)
 * [1: Change Images to run unpriviledged](1-change-images-to-run-unpriviledged/README.md)
   * [What OpenShift expects!](1-change-images-to-run-unpriviledged/what-openshift-expects.md)
   * [Adapting the Dockerfiles](1-change-images-to-run-unpriviledged/adapting-the-dockerfiles.md)
