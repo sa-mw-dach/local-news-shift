@@ -30,5 +30,7 @@ The easiest way is to deploy it with Helm and access the frontend via NodePort.
 
 ```
 kubectl create ns localnews
-helm install localnews k8s/helm-chart -n localnews
+kubectl apply -f k8s/plain-manifests -n localnews
 ```
+
+But wait a minute - will it work like that if you are connected to an OpenShift cluster? As indicated above, we need to make some tweaks! Let's start with the building blocks of our application - the Container Images.&#x20;
