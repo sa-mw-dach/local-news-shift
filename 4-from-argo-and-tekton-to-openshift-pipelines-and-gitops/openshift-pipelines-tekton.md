@@ -137,3 +137,10 @@ We should immediatly see a new PipelineRun in our OpenShift Cluster and can foll
 ```
 oc get deployments -n newsbackend-integration-gitops news-backend -o jsonpath="{.spec.template.spec.containers[:1].image}
 ```
+
+Finally clean up the deployment with the following:
+
+```
+kubectl delete namespace newsbackend-integration
+```
+
