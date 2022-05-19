@@ -14,7 +14,7 @@
   * [What OpenShift expects!](3-use-openshift-in-the-inner-loop/what-openshift-expects.md)
   * [Who knows?](3-use-openshift-in-the-inner-loop/who-knows.md)
   * [Leverage OpenShift capabilities](3-use-openshift-in-the-inner-loop/leverage-openshift-capabilities.md)
-* [4: From Argo and Tekton to OpenShift Pipelines and GitOps](4-from-argo-and-tekton-to-openshift-pipelines-and-gitops/README.md)
+* [4: From Argo and Tekton to OpenShift Pipelines and GitOps](4-from-argo-and-tekton-to-openshift-pipelines-and-gitops.md)
   * [OpenShift Pipelines (Tekton)](4-from-argo-and-tekton-to-openshift-pipelines-and-gitops/openshift-pipelines-tekton.md)
   * [Page 1](4-from-argo-and-tekton-to-openshift-pipelines-and-gitops/page-1.md)
 * [5: Build and Publish an Operator on OpenShift](5-build-and-publish-an-operator-on-openshift.md)
