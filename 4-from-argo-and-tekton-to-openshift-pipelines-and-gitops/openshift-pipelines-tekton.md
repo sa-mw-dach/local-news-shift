@@ -27,7 +27,7 @@ For now OpenShift gives us all the Tasks we need for the Pipeline below.&#x20;
 Later, when we move to GitOps, we will integrate this with our Pipeline and do a little bit of custom work on Tasks. One we will get from the community hub and the other one we will just create.
 {% endhint %}
 
-![](<../.gitbook/assets/image (3).png>)
+![](<../.gitbook/assets/image (3) (1).png>)
 
 As you've already crafted your Pipeline for upstream Tekton you come with a YAML file. And you would want it to work! And it actually it does almost out of the Box. The only thing to do is to replace in your 4 task references, that the integrated ClusterTasks should be used like so:
 
