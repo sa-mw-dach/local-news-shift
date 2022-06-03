@@ -30,4 +30,4 @@ Two of our Pods are in "CrashLoopBackOff" state and if we look into the logs of 
 
 ![](<../.gitbook/assets/image (5).png>)
 
-Let's fix it by having a look at the Dockerfile
+Let's fix it by having a look at the Dockerfile.
