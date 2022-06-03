@@ -5,6 +5,7 @@
 * [1: Leverage OpenShift as your Security Engine and easy Deployment](1-leverage-openshift-as-your-security-engine-and-easy-deployment/README.md)
   * [Don't ask why non-root but why root!](1-leverage-openshift-as-your-security-engine-and-easy-deployment/dont-ask-why-non-root-but-why-root.md)
   * [Adapting the Dockerfiles](1-leverage-openshift-as-your-security-engine-and-easy-deployment/adapting-the-dockerfiles.md)
+  * [Adapting the Helm Chart](1-leverage-openshift-as-your-security-engine-and-easy-deployment/adapting-the-helm-chart.md)
   * [Leverage OpenShift](1-leverage-openshift-as-your-security-engine-and-easy-deployment/leverage-openshift.md)
 * [2: Expand Helm to use OpenShift Routes](2-expand-helm-to-use-openshift-routes/README.md)
   * [What OpenShift expects!](2-expand-helm-to-use-openshift-routes/what-openshift-expects.md)
