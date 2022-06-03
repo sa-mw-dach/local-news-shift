@@ -1,2 +1,0 @@
-# Leverage OpenShift
-
