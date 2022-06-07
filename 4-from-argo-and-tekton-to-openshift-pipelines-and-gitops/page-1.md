@@ -17,3 +17,17 @@ If you are unfamiliar with GitOps check out this article and the picture below s
 Yes, before we jump right into GitOps, let's quickly think about how to integrate this with Pipelines. Because at the end of the day, we would like to use GitOps&#x20;
 
 ![](<../.gitbook/assets/image (3).png>)
+
+## Tekton Tasks
+
+```
+oc apply -n localnews-pipelines -f snippets/chapter5/openshift/pipeline-resources/java-backend-simple-pipeline-gitops.yaml
+```
+
+```
+oc apply -n localnews-pipelines -f snippets/chapter5/openshift/gitops/EventListenerPushGitOps.yaml 
+```
+
+```
+// Some code
+```

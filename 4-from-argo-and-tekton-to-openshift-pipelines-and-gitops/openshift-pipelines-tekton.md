@@ -45,6 +45,7 @@ As you've already crafted your Pipeline for upstream Tekton you come with a YAML
 And then you are all set to deploy your Pipeline!
 
 ```
+oc new-project localnews-pipelines
 kubectl apply -n localnews-pipelines -f snippets/chapter5/openshift/pipeline-resources/java-backend-simple-pipeline.yaml
 ```
 
