@@ -14,11 +14,25 @@ If you are unfamiliar with GitOps check out this article and the picture below s
 
 ## Tekton Tasks
 
-Yes, before we jump right into GitOps, let's quickly think about how to integrate this with Pipelines. Because at the end of the day, we would like to use GitOps&#x20;
+Yes, before we jump right into GitOps, let's quickly think about how to integrate this with Pipelines. Because at the end of the day, we would like to use GitOps together with an automated Pipeline.
 
 ![](<../.gitbook/assets/image (3).png>)
 
 ## Tekton Tasks
+
+Therefore, we have to start with our Tekton Tasks again. Do we have them all ready in the cluster? Almost! As before, we pull the repo, build the Java Quarkus application with maven and build & push a container image.
+
+In this example we use a Helm Chart to deploy the application. But a "helm install / helm upgrade" Task is no longer required. Rather we have to put a reference to our new Container Image into the Helm Chart, here by replacing the Image Tag with an updated value. We use yq, the YAML pendant to jq, to do the change. But there is no lightweight container image with yq available in the cluster.&#x20;
+
+We could now build a container image with the Red Hat UBI as base image and install yq, but for this demo we will use a Task from the community Tekton catalog.
+
+```
+kubectl apply -n localnews-pipelines -f https://raw.githubusercontent.com/tektoncd/catalog/main/task/yq/0.2/yq.yaml
+```
+
+The "git cli" and "oc cli" Tasks are used to push the updated Helm Chart to our Git Repo and, afterwards, run a check for the changes to become applied to the cluster. Of course, we expect ArgoCD to catch the changes and do this by itself, but better safe than sorry :) (What if ArgoCD is down by chance?)
+
+Both Tasks are available as OpenShift Cluster Tasks, so we can just change from the community Tasks to the OpenShift certified cluster Tasks and apply our updated pipeline.
 
 ```
 oc apply -n localnews-pipelines -f snippets/chapter5/openshift/pipeline-resources/java-backend-simple-pipeline-gitops.yaml
