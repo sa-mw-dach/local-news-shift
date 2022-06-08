@@ -32,6 +32,8 @@ kubectl apply -n localnews-pipelines -f https://raw.githubusercontent.com/tekton
 
 The "git cli" and "oc cli" Tasks are used to push the updated Helm Chart to our Git Repo and, afterwards, run a check for the changes to become applied to the cluster. Of course, we expect ArgoCD to catch the changes and do this by itself, but better safe than sorry :) (What if ArgoCD is down by chance?)
 
+## The Pipeline
+
 Both Tasks are available as OpenShift Cluster Tasks, so we can just change from the community Tasks to the OpenShift certified cluster Tasks and apply our updated pipeline.
 
 ```
@@ -40,13 +42,15 @@ oc apply -n localnews-pipelines -f snippets/chapter5/openshift/pipeline-resource
 
 Since ArgoCD is installed via the supported OpenShift GitOps functionality nothing stops us now from creating our ArgoCD application, which will in fact monitor the Helm Chart and install it in our cluster.
 
+## ArgoCD application
+
 ```
 kubectl apply -n openshift-gitops -f snippets/chapter5/openshift/gitops/argocd-application.yaml
 ```
 
 But did it work? You could head over to the Dashboard now, which will tell you OutOfSync and you will see some permission errors. Guess what - Security Measures enforced by OpenShift! OpenShift GitOps needs explicit permissions to manage the Namespace "newsbackend-integration-gitops" which is used to deploy the application.
 
-![](<../.gitbook/assets/image (6).png>)
+![](<../.gitbook/assets/image (7).png>)
 
 So, since OpenShift GitOps explicitly needs to be given access to a namespace that it is supposed to manage, just add a label to the respective namespace:
 
@@ -62,3 +66,42 @@ Check it via the GUI or CLI with
 kubectl describe application -n openshift-gitops localnews
 ```
 
+## Triggering the Pipeline
+
+With GitOps we want all our changes to go through Git! So, let our Pipeline make a new build of the "news-backend" component and use our Git commit ID as the image tag to make it unique. Let's check the current Image Tag:
+
+```
+kubectl get deployments -n newsbackend-integration-gitops news-backend -o yaml | grep image:
+```
+
+It should look like this:
+
+![](<../.gitbook/assets/image (6).png>)
+
+To trigger the Pipeline from Git we need an EventListener running in the cluster. Actually, we created one already in the previous part. Let us just modify it to execute not the old, but our newly tailored Pipeline to edit and push the Helm Chart.
+
+```
+## ensure the old one is still there:
+kubectl apply -f snippets/chapter5/openshift/github_push_listener -n localnews-pipelines
+## modify it:
+kubectl apply -f snippets/chapter5/openshift/gitops/EventListenerPushGitOps.yaml -n localnews-pipelines
+```
+
+Again, we will not do the integration with a real Git Repo, but just mock what a GitHub webhook typically looks like with curl. At first ensure the port-forwarding to your Event Listener is active.
+
+```
+kubectl port-forward -n localnews-pipelines service/el-github-new-push-listener 9998:8080curl -v \
+```
+
+```
+curl -v \
+    -H 'X-GitHub-Event: push' \
+    -H 'X-Hub-Signature: sha1=b60860d27da67ed1753b5a262c41f35b0c20dbcd' \
+    -H 'Content-Type: application/json' \
+    -d '{"ref": "refs/heads/main", "head_commit":{"id": "v1.0.0-your-fake-commit-id"}, "repository":{"clone_url":"git@github.com:sa-mw-dach/local-news-shift.git"}, "image_repo": "docker.io/maxisses"}' \
+    http://localhost:9998
+```
+
+{% hint style="info" %}
+Remember that the JSON payload has to match the sha1 signature!
+{% endhint %}
