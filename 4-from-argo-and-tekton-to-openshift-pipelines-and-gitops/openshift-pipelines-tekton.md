@@ -17,7 +17,7 @@ Now there are two options:
 1. Build your own Base Images for the Task. As an example we could look at the maven task ([https://hub.tekton.dev/tekton/task/maven](https://hub.tekton.dev/tekton/task/maven)). The community version uses gcr.io/cloud-builders/mvn. One could just replace it with another image, adhering to the security guidelines.
 2. But there is a much easier way. OpenShift ships with a lot of so-called ClusterTasks and basically all of the steps you see below are well covered by them. And if the included tasks don't fit your needs, you can create your own and share them with everyone in this, or even across clusters. A good starting point is to use the built-in "create" function that shows some samples which are being built on top of the UBI (universal base image) fully supported by Red Hat.
 
-![](<../.gitbook/assets/image (2).png>)
+![](<../.gitbook/assets/image (2) (1).png>)
 
 ## The Pipeline
 

@@ -10,7 +10,7 @@ oc apply -f snippets/chapter5/openshift/operators-subs/pipelines-operator-sub.ya
 
 If you are unfamiliar with GitOps check out this article and the picture below showing the concept:
 
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (2).png>)
 
 ## Tekton Tasks
 
@@ -105,3 +105,12 @@ curl -v \
 {% hint style="info" %}
 Remember that the JSON payload has to match the sha1 signature!
 {% endhint %}
+
+The curl should get accepted with a 202 HTTP response from the Event Listener and then you can head over to your OpenShift Cluster and view your Pipeline running.
+
+![](../.gitbook/assets/image.png)
+
+Once the Pipeline successfully completed the "git-push-update-helm" Task, the "check-successful-sync" waits until OpenShift GitOps picked up the changes and applied them to the Cluster. The default polling frequency is every 3 minutes, so it might take a few moments. But as soon as it is applied the Pipeline is green, the application is synched and, if we inspect the news-backend Deployment again, we see a new Image Tag with the values passed into the Pipeline via our fake Webhook!
+
+![](<../.gitbook/assets/image (1).png>)
+
