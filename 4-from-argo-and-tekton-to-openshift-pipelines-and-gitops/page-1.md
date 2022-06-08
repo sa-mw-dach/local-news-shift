@@ -114,3 +114,13 @@ Once the Pipeline successfully completed the "git-push-update-helm" Task, the "c
 
 ![](<../.gitbook/assets/image (1).png>)
 
+## Wrapping it up
+
+
+
+
+
+
+
+![](<../.gitbook/assets/image (5).png>)
+

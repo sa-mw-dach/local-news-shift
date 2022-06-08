@@ -28,6 +28,6 @@ oc get pods
 
 Two of our Pods are in "CrashLoopBackOff" state and if we look into the logs of these Pods we see a permission denied. They are running as root!
 
-![](<../.gitbook/assets/image (5).png>)
+![](<../.gitbook/assets/image (5) (1).png>)
 
 Let's fix it by having a look at the Dockerfile.
