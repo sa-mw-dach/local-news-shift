@@ -38,10 +38,27 @@ Both Tasks are available as OpenShift Cluster Tasks, so we can just change from 
 oc apply -n localnews-pipelines -f snippets/chapter5/openshift/pipeline-resources/java-backend-simple-pipeline-gitops.yaml
 ```
 
-```
-oc apply -n localnews-pipelines -f snippets/chapter5/openshift/gitops/EventListenerPushGitOps.yaml 
-```
+Since ArgoCD is installed via the supported OpenShift GitOps functionality nothing stops us now from creating our ArgoCD application, which will in fact monitor the Helm Chart and install it in our cluster.
 
 ```
-// Some code
+kubectl apply -n openshift-gitops -f snippets/chapter5/openshift/gitops/argocd-application.yaml
 ```
+
+But did it work? You could head over to the Dashboard now, which will tell you OutOfSync and you will see some permission errors. Guess what - Security Measures enforced by OpenShift! OpenShift GitOps needs explicit permissions to manage the Namespace "newsbackend-integration-gitops" which is used to deploy the application.
+
+![](<../.gitbook/assets/image (6).png>)
+
+So, since OpenShift GitOps explicitly needs to be given access to a namespace that it is supposed to manage, just add a label to the respective namespace:
+
+```
+oc label namespace newsbackend-integration-gitops argocd.argoproj.io/managed-by=openshift-gitops
+```
+
+After the next poll OpenShift GitOps will notice that the service account associated with this operations now has sufficient permissions and will deploy the application via Helm.
+
+Check it via the GUI or CLI with
+
+```
+kubectl describe application -n openshift-gitops localnews
+```
+
