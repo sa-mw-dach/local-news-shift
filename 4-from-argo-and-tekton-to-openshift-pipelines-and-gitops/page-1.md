@@ -116,11 +116,9 @@ Once the Pipeline successfully completed the "git-push-update-helm" Task, the "c
 
 ## Wrapping it up
 
+We've simulated a GitHub webhook that instantiated a PipelineRun with a dedicated Service Account, specific parameters and a YAML template of the Pipeline. This YAML file could have actually been anything - not necessarily a Pipeline. So this is very flexbile.
 
-
-
-
-
+After a successful PipelineRun a new container image was deployed via OpenShift GitOps.
 
 ![](<../.gitbook/assets/image (5).png>)
 
