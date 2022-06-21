@@ -4,7 +4,7 @@ The [`OpenShift documentation`](https://docs.openshift.com/container-platform/4.
 
 > To further protect RHCOS systems in OpenShift Container Platform clusters, most containers, except those managing or monitoring the host system itself, should run as a non-root user. Dropping the privilege level or creating containers with the least amount of privileges possible is recommended best practice for protecting your own OpenShift Container Platform clusters.
 
-So one may ask why is it necessary? But actually it is the wrong question! Because if something does not need root access, it shouldn't have it to make the attack surface minimal.
+So one may ask why is it necessary? But actually it is the wrong question! Because if something does not need root access, it shouldn't have it - to make the attack surface minimal.
 
 Let's see if we took care of it in our sample application. There is a Helm Chart ready to deploy the Local News application, but it has not been tested on OpenShift.
 
