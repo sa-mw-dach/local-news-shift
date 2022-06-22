@@ -1,8 +1,8 @@
 # Table of contents
 
 * [Titel](README.md)
-* [Introduction](<README (1).md>)
-* [Background: The Local News Application](<README (1) (1).md>)
+* [Introduction](README.md)
+* [Background: The Local News Application](<README (1).md>)
 * [1: Leverage OpenShift as your Security Engine and for easy Deployment](1-leverage-openshift-as-your-security-engine-and-easy-deployment/README.md)
   * [Don't ask why non-root but why root!](1-leverage-openshift-as-your-security-engine-and-easy-deployment/dont-ask-why-non-root-but-why-root.md)
   * [Adapting the Dockerfiles](1-leverage-openshift-as-your-security-engine-and-easy-deployment/adapting-the-dockerfiles.md)
