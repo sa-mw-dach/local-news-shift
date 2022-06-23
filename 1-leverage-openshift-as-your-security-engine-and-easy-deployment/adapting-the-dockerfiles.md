@@ -2,7 +2,9 @@
 
 ## News-Frontend component: Angular with NGINX&#x20;
 
-In the Helm Chart we see that the Image quay.io/k8snativedev/news-frontend:latest causes the trouble. For ease of use we included a multi-stage build Dockerfile. It builds the application with _ng_ and makes the resulting artifact available to the next stage.&#x20;
+In the Helm Chart we see that the Image quay.io/k8snativedev/news-frontend:latest causes the trouble. For ease of use we included a multi-stage build Dockerfile. In a later part, when we'll show how to move from upstream Tekton and ArgoCD those two stages will be done separetly.&#x20;
+
+Here it builds the application with _ng_ and makes the resulting artifact available to the next stage.&#x20;
 
 If we look at the second stage of the Dockerfile we see that the Image runs a standard nginx from docker.io, exposes port 80 - the standard for nginx - and finally starts nginx. In the CMD we can see that a "settings.template.json" file replaces the standard "settings.json". This allows for setting environment variables at each startup of the container.&#x20;
 
@@ -97,9 +99,9 @@ CMD ["/bin/sh",  "-c",  "envsubst < /opt/app-root/src/assets/settings.template.j
 
 For the other components we will not go into the same depth. But again you can leverage the UBI to solve security issues, get Red Hat's Enterprise Support and fetch your images from a vetted source.
 
-### Python
+### Location Extractor: Python
 
-
+In our original approach the Python App, that serves to extract locations and get coordinates for them, was started with an Image from Docker Hub ([Official Python Image](https://hub.docker.com/\_/python))with supervisord. The issues are somewhat similar to those described in previous part.
 
 ```
 # Stage 1: package the app and dependencies in a venv
@@ -120,5 +122,20 @@ USER 1001
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.wsgi:app" ]
 ```
 
-### Java & Quarkus
+### Feed-Scraper: Java
 
+
+
+```
+# Stage 1: Build Application with Maven
+FROM registry.access.redhat.com/ubi8/openjdk-11 AS build
+WORKDIR /home/jboss
+COPY src /home/jboss/src
+COPY pom.xml /home/jboss
+RUN mvn -f /home/jboss/pom.xml clean package
+
+# Stage 2: Run with OpenJDK Runtime
+FROM registry.access.redhat.com/ubi8/openjdk-11-runtime
+COPY --from=build /home/jboss/target/feed-scraper-jar-with-dependencies.jar /usr/local/lib/feed-scraper.jar
+ENTRYPOINT ["java","-jar","/usr/local/lib/feed-scraper.jar"]
+```
