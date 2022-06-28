@@ -153,3 +153,9 @@ helm upgrade -i localnews k8s/helm-chart -f k8s/helm-chart/values-openshift.yaml
 What we observe is that even though we provided only an Ingress resource, OpenShift automatically creates a route for us, that is then publicly accessible.
 
 ![](../.gitbook/assets/image.png)
+
+## Leverage OpenShift
+
+We have seen that with the Red Hat certified Container Catalog, containing the different flavors of the UBI, and OpenShift as a platform we can easily roll-out our application with Helm in a secure and supported way. We can now manage our Helm release via OpenShift and configure our Application with the Developer view.
+
+![](<../.gitbook/assets/image (3).png>)

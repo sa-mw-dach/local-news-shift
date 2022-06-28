@@ -16,7 +16,7 @@ If you are unfamiliar with GitOps check out this article and the picture below s
 
 Yes, before we jump right into GitOps, let's quickly think about how to integrate this with Pipelines. Because at the end of the day, we would like to use GitOps together with an automated Pipeline.
 
-![](<../.gitbook/assets/image (3).png>)
+![](<../.gitbook/assets/image (3) (1).png>)
 
 ## Tekton Tasks
 
