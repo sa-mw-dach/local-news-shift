@@ -10,7 +10,7 @@ If we look at Stage 2 of the Dockerfile we see that the Image runs a standard ng
 
 ```
 # Stage 1: build the app
-FROM registry.access.redhat.com/ubi7/nodejs-12 AS builder
+FROM registry.access.redhat.com/ubi7/nodejs-14 AS builder
 WORKDIR /opt/app-root/src
 COPY package.json /opt/app-root/src
 RUN npm install
@@ -52,7 +52,7 @@ Now what are options to make our Container more secure and run on a fully suppor
 
 ### Solving issue 1 & 2
 
-While it seems like we need a customized nginx base image and have to bother with the config files - actually, we don't. We will just use the Universal Base Image (UBI) from Red Hat that runs an unpriviledged nginx listening on port 8080. This is a certified and, running on OpenShift, fully supported base image you can find [here](https://catalog.redhat.com/software/containers/ubi8/nginx-120/6156abfac739c0a4123a86fd?container-tabs=overview). So we change the base image for Stage 2 to __&#x20;
+While it seems like we need a customized nginx base image and have to bother with the config files - actually, we don't. We will just use the Universal Base Image (UBI) from Red Hat that runs an unpriviledged nginx listening on port 8080. This is a certified and, running on OpenShift, fully supported base image you can find [here](https://catalog.redhat.com/software/containers/ubi8/nginx-120/6156abfac739c0a4123a86fd?container-tabs=overview). So we change the base image for Stage 2 to the one depicted below.
 
 ```
 # Stage 2: serve it with nginx
@@ -61,9 +61,11 @@ FROM registry.access.redhat.com/ubi8/nginx-120 AS deploy
 
 ### Solving issue 3
 
-If you review the Dockerfile of the UBI we use as the base image you see that it uses User 1001. So it is tempting to give the permissions to _/opt/app-root/src/assets_ to User 1001. But, remember, OpenShift is overwriting this UID. Therefore, we have to take a different approach.
+If you review the [Dockerfile of the UBI](https://catalog.redhat.com/software/containers/ubi8/nginx-120/6156abfac739c0a4123a86fd?container-tabs=dockerfile) we use as the base image you see that it uses User 1001. So it is tempting to give the permissions to _/opt/app-root/src/assets_ to User 1001. But, remember, even though 1001 is not the root user, OpenShift is overwriting this UID. Therefore, we have to take a different approach.
 
-For an image to support running as an arbitrary user, directories and files that may be written to by processes in the image should be owned by the root group and be read/writable by that group. Files to be executed should also have group execute permissions.
+The OpenShift documentation provides a solution:
+
+> For an image to support running as an arbitrary user, directories and files that are written to by processes in the image must be owned by the root group and be read/writable by that group. Files to be executed must also have group execute permissions.
 
 Adding the following to our Dockerfile sets the directory and file permissions to allow users in the root group to access them in the built image:
 
@@ -74,7 +76,7 @@ RUN chgrp -R 0 /opt/app-root/src/assets && \
 
 Because the container user is always a member of the root group, the container user can read and write these files. The root group does not have any special permissions (unlike the root user) so there are no security concerns with this arrangement.
 
-### Final result
+After incorporating the three changes we end up with the following Dockerfile, building on the secure and supported foundation of the UBI.
 
 ```
 # Stage 1: build the app
@@ -101,11 +103,9 @@ CMD ["/bin/sh",  "-c",  "envsubst < /opt/app-root/src/assets/settings.template.j
 
 ```
 
-## The other components: Python & Java
 
-For the other components we will not go into the same depth. But again you can leverage the UBI to solve security issues, get Red Hat's Enterprise Support and fetch your images from a vetted source.
 
-### Location Extractor: Python
+## Location Extractor: Python
 
 In our original approach the Python App, that serves to extract locations and get coordinates for them, was started with an Image from Docker Hub ([Official Python Image](https://hub.docker.com/\_/python))with supervisord. The issues are somewhat similar to those described in previous part.
 
