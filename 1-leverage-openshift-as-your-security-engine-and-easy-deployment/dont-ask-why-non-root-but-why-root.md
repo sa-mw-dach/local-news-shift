@@ -18,7 +18,7 @@ helm install localnews k8s/helm-chart
 
 That should deliver the result in the image.
 
-![Helm Release in OCP v4.10](<../.gitbook/assets/image (4).png>)
+![Helm Release in OCP v4.10](<../.gitbook/assets/image (4) (1).png>)
 
 Two components of our application are in a degraded state. Let's have a look with
 

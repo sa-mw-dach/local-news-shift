@@ -50,7 +50,7 @@ kubectl apply -n localnews-pipelines -f snippets/chapter5/openshift/pipeline-res
 ```
 
 {% hint style="info" %}
-A pretty cool feature of OpenShift is that it actually saves you a lot of YAML-work with a Graphical Pipeline Builder, completely integrated into the OpenShift UI. ![](<../.gitbook/assets/image (4) (1).png>)\
+A pretty cool feature of OpenShift is that it actually saves you a lot of YAML-work with a Graphical Pipeline Builder, completely integrated into the OpenShift UI. ![](<../.gitbook/assets/image (4) (1) (1).png>)\
 \
 Moreover, you might even just deploy an application with "oc new-app" or via the UI and OpenShift generates an appropriate build and deploy Pipeline for you. Afterwards, just fetch the YAML and bring into version control for further reuse!
 {% endhint %}

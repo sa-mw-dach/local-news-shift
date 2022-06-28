@@ -156,6 +156,6 @@ What we observe is that even though we provided only an Ingress resource, OpenSh
 
 ## Leverage OpenShift
 
-We have seen that with the Red Hat certified Container Catalog, containing the different flavors of the UBI, and OpenShift as a platform we can easily roll-out our application with Helm in a secure and supported way. We can now manage our Helm release via OpenShift and configure our Application with the Developer view.
+We have seen that with the Red Hat certified Container Catalog, containing the different flavours of the UBI, and OpenShift as a platform we can easily roll-out our application with Helm in a secure and supported way with base images from a vetted source. We can now manage our Helm release via OpenShift and configure our Application with the Developer view.
 
-![](<../.gitbook/assets/image (3).png>)
+![](<../.gitbook/assets/image (4).png>)
