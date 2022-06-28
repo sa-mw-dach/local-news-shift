@@ -50,7 +50,7 @@ kubectl apply -n openshift-gitops -f snippets/chapter5/openshift/gitops/argocd-a
 
 But did it work? You could head over to the Dashboard now, which will tell you OutOfSync and you will see some permission errors. Guess what - Security Measures enforced by OpenShift! OpenShift GitOps needs explicit permissions to manage the Namespace "newsbackend-integration-gitops" which is used to deploy the application.
 
-![](<../.gitbook/assets/image (7).png>)
+![](<../.gitbook/assets/image (7) (1).png>)
 
 So, since OpenShift GitOps explicitly needs to be given access to a namespace that it is supposed to manage, just add a label to the respective namespace:
 
@@ -76,7 +76,7 @@ kubectl get deployments -n newsbackend-integration-gitops news-backend -o yaml |
 
 It should look like this:
 
-![](<../.gitbook/assets/image (6).png>)
+![](<../.gitbook/assets/image (6) (1).png>)
 
 To trigger the Pipeline from Git we need an EventListener running in the cluster. Actually, we created one already in the previous part. Let us just modify it to execute not the old, but our newly tailored Pipeline to edit and push the Helm Chart.
 
@@ -108,11 +108,11 @@ Remember that the JSON payload has to match the sha1 signature!
 
 The curl should get accepted with a 202 HTTP response from the Event Listener and then you can head over to your OpenShift Cluster and view your Pipeline running.
 
-![](../.gitbook/assets/image.png)
+![](<../.gitbook/assets/image (1).png>)
 
 Once the Pipeline successfully completed the "git-push-update-helm" Task, the "check-successful-sync" waits until OpenShift GitOps picked up the changes and applied them to the Cluster. The default polling frequency is every 3 minutes, so it might take a few moments. But as soon as it is applied the Pipeline is green, the application is synched and, if we inspect the news-backend Deployment again, we see a new Image Tag with the values passed into the Pipeline via our fake Webhook!
 
-![](<../.gitbook/assets/image (1).png>)
+![](<../.gitbook/assets/image (1) (1).png>)
 
 ## Wrapping it up
 

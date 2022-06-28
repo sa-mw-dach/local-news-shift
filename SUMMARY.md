@@ -5,7 +5,7 @@
 * [Background: The Local News Application](<README (1) (1).md>)
 * [Run: Get your Angular, Python or Java Dockerfile ready with Red Hat's Universal Base Image](1-leverage-openshift-as-your-security-engine-and-easy-deployment/README.md)
   * [Don't ask why non-root but why root!](1-leverage-openshift-as-your-security-engine-and-easy-deployment/dont-ask-why-non-root-but-why-root.md)
-  * [Adapting the Dockerfiles & Helm](run-get-your-angular-python-or-java-dockerfile-ready-with-red-hats-universal-base-image/adapting-the-dockerfiles-and-helm.md)
+  * [Adapting the Dockerfiles & Helm](1-leverage-openshift-as-your-security-engine-and-easy-deployment/adapting-the-dockerfiles.md)
   * [Leverage OpenShift](1-leverage-openshift-as-your-security-engine-and-easy-deployment/leverage-openshift.md)
 * [Develop: The Inner Loop with OpenShift Dev Spaces](3-use-openshift-in-the-inner-loop/README.md)
   * [What OpenShift expects!](3-use-openshift-in-the-inner-loop/what-openshift-expects.md)

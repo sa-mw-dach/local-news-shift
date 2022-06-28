@@ -149,3 +149,7 @@ helm upgrade -i localnews k8s/helm-chart -f k8s/helm-chart/values-openshift.yaml
 --set newsfrontend.envVars.backend.nodePort.value="80" \
 --set localnews.domain="mycluster.eu-de.containers.appdomain.cloud"
 ```
+
+What we observe is that even though we provided only an Ingress resource, OpenShift automatically creates a route for us, that is then publicly accessible.
+
+![](../.gitbook/assets/image.png)
