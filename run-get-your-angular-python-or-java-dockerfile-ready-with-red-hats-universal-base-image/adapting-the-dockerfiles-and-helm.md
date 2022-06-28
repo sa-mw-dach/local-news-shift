@@ -1,6 +1,6 @@
-# Adapting the Dockerfiles
+# Adapting the Dockerfiles & Helm
 
-## News-Frontend component: Angular with NGINX&#x20;
+### News-Frontend component: Angular with NGINX&#x20;
 
 In the [Helm Chart](https://github.com/sa-mw-dach/local-news-shift/tree/openshift/k8s/helm-chart) we see that the Image quay.io/k8snativedev/news-frontend:latest causes the trouble. For ease of use we included a Dockerfile with a multi-stage build process, to make it easier to follow along. In a later part, when we'll show how to move from upstream Tekton and ArgoCD to OpenShift, those two stages will be done in two distinct steps.&#x20;
 
@@ -105,7 +105,7 @@ CMD ["/bin/sh",  "-c",  "envsubst < /opt/app-root/src/assets/settings.template.j
 
 
 
-## Location Extractor: Python
+### Location Extractor: Python
 
 For the Location Extractor component, that serves to extract locations and get coordinates for them, we will not go into same depth. But we have to fix it. In our original approach the Python App was started with an Image from Docker Hub ([Official Python Image](https://hub.docker.com/\_/python))with supervisord running nginx and a wsgi server. The issues are actually pretty similar to those described in previous part.
 
@@ -135,3 +135,17 @@ CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.wsgi:app" ]
 The other components were already working without any adjustments. Still, if we have a look at the Git Repo and the Dockerfiles for the news-backend component, a Quarkus application, and the feed-scraper component, a Java EE application, we discover that we can also leverage the UBI here e.g. by using [openjdk-11](https://catalog.redhat.com/software/containers/ubi8/openjdk-11/5dd6a4b45a13461646f677f4) or the [openjdk11-runtime](https://catalog.redhat.com/software/containers/ubi8/openjdk-11-runtime/606dcb7d0f75e8ece4deec1f).
 
 If we apply all the changes above to our images and configure our Helm Chart accordingly, we run on a Red Hat certified stack with all our application components. The next thing to look into is what changes the concept of OpenShift Routes compared to the Kubernetes Ingress resource mean for us.
+
+## Configuring the Helm Chart
+
+In the [Git Repo](https://github.com/sa-mw-dach/local-news-shift/tree/openshift/k8s/helm-chart) we provide a new _values_ File to reflect the necessary changes we have made to the Container Images of the news-frontend and the location-extractor component. We rebuilt the Images and tagged them with _openshift_ and reflected the changes in _values-openshift.yaml_.&#x20;
+
+The nice thing about OpenShift Routes is that they get created automatically if we provide an Ingress Resource. There are two components we have to expose to the public. One is the news-frontend and the other one the news-backend, because the Angular Web Application is making a connection from the client-side to the news-backend. Both Ingresses are prepared as Helm templates already. The only thing we have to do is to provide our specific cluster ingress subdomain when deploying the application and specify our new _values-openshift.yaml_ instead of the stand _values.yaml_ file.
+
+```
+helm upgrade -i localnews k8s/helm-chart -f k8s/helm-chart/values-openshift.yaml \
+--set newsfrontend.backendConnection="viaIngress" \
+--set newsfrontend.envVars.backend.prefix.value="http://" \
+--set newsfrontend.envVars.backend.nodePort.value="80" \
+--set localnews.domain="mycluster.eu-de.containers.appdomain.cloud"
+```
