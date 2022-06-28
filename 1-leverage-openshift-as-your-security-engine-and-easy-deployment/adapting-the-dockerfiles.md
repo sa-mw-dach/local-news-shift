@@ -2,11 +2,11 @@
 
 ## News-Frontend component: Angular with NGINX&#x20;
 
-In the Helm Chart we see that the Image quay.io/k8snativedev/news-frontend:latest causes the trouble. For ease of use we included a multi-stage build Dockerfile. In a later part, when we'll show how to move from upstream Tekton and ArgoCD those two stages will be done separetly.&#x20;
+In the [Helm Chart](https://github.com/sa-mw-dach/local-news-shift/tree/openshift/k8s/helm-chart) we see that the Image quay.io/k8snativedev/news-frontend:latest causes the trouble. For ease of use we included a Dockerfile with a multi-stage build process, to make it easier to follow along. In a later part, when we'll show how to move from upstream Tekton and ArgoCD to OpenShift, those two stages will be done in two distinct steps.&#x20;
 
-Here it builds the application with _ng_ and makes the resulting artifact available to the next stage.&#x20;
+But in the multi-stage Dockerfile below Stage 1 serves to build the application with _ng_ and makes the resulting artifact available to the next stage.&#x20;
 
-If we look at the second stage of the Dockerfile we see that the Image runs a standard nginx from docker.io, exposes port 80 - the standard for nginx - and finally starts nginx. In the CMD we can see that a "settings.template.json" file replaces the standard "settings.json". This allows for setting environment variables at each startup of the container.&#x20;
+If we look at Stage 2 of the Dockerfile we see that the Image runs a standard nginx from docker.io, exposes port 80 - the standard for nginx - and finally starts nginx. In the CMD instruction of the Dockerfile in line 14 we can see that a _settings.template.json_ file replaces the standard "settings.json". This allows for setting environment variables at each startup of the container, which is something Angular, unfortunately, does not provide out-of-the-box. There is also some code in the application to actually inject the variables passed in by the _settings.json_ file.
 
 ```
 # Stage 1: build the app
@@ -26,19 +26,25 @@ CMD ["/bin/sh",  "-c",  "envsubst < /usr/share/nginx/html/assets/settings.templa
 
 ```
 
-While Stage 1, the build stage, already works with a Red Hat Universal Base Image (UBI) that per default runs with a non-root user, Stage 2, the serving stage, has a few security issues here to solve.&#x20;
+While Stage 1, the build stage, already works with a Red Hat Universal Base Image (UBI) that per default runs with a non-root user, Stage 2, the serving stage, has a few security issues that made it crash with the OpenShift default settings as we saw earlier. Basically there are three issues:
 
-1.  **Non-Root User**
+1.  **Root User**
 
-    Nginx from DockerHub runs per default with a root user - OpenShift doesn't accept this security risk
+    Nginx from DockerHub runs per default with a root user - the default OpenShift [SCC](https://docs.openshift.com/container-platform/4.10/authentication/managing-security-context-constraints.html) (Security Context Constraint) prevents Containers from running with root privileges.
 2. **Priviledged Ports**\
-   If we switch to a non-priviledged user we can't use a priviledged port between 80 - 1024
+   [Priviledged ports](https://cloud.redhat.com/blog/linux-capabilities-in-openshift), in the range of 80 - 1024, are only available to the root user.  But the root user is not available.
 3. **Specifically grant access to directories**\
-   In OpenShift each Namespace/Project has a pool of user IDs to draw from. It then starts your Container with one of them, overriding whatever user ID the image itself may specify. The problem here is that this "random" user will not have access to _/usr/share/nginx/html/assets/._ But as you can see in our CMD instruction we substitute the values of some environment variables. We put some code into our Angular App to be able to set Environment Variables at startup and stream them in via the _settings.template.json_ file.
+   ****Below we see the logs of the news-frontend container, that is stuck in a _CrashLoopBackOff_ state.&#x20;
 
-Now the third part is exactly the reason why two of our components failed to start. They want to start as root, but get assigned a different UID and, hence, are not able to run, because root was expected.
+> /bin/sh: 1: cannot create /usr/share/nginx/html/assets/settings.json: Permission denied
 
-Now what are options to make our Container more secure?
+This behaviour needs some more explanation because it is not just that OpenShift doesn't allow to start Containers with root permission. In OpenShift each Namespace/Project has a pool of user IDs to draw from. It is part of an annotation each OpenShift Project has and looks something like _openshift.io/sa.scc.uid-range=1000570000/10000_.&#x20;
+
+So the Container starts with one of these UID's, overriding whatever UID the image itself may specify. The problem here is that this "arbitrary" user will not have access to _/usr/share/nginx/html/assets/._ But as you can see in our CMD instruction we substitute the values of some environment variables.
+
+Now this is exactly the reason why two of our components failed to start. They want to start as root, but get assigned a different UID and, hence, are not able to run, because root was expected.
+
+Now what are options to make our Container more secure and run on a fully supported and vetted stack?
 
 1. **Run NGINX unpriviledged**
 2. **Rewrite the nginx.conf to Listen on an unpriviledged port**
