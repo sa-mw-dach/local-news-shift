@@ -107,7 +107,9 @@ CMD ["/bin/sh",  "-c",  "envsubst < /opt/app-root/src/assets/settings.template.j
 
 ## Location Extractor: Python
 
-In our original approach the Python App, that serves to extract locations and get coordinates for them, was started with an Image from Docker Hub ([Official Python Image](https://hub.docker.com/\_/python))with supervisord. The issues are somewhat similar to those described in previous part.
+For the Location Extractor component, that serves to extract locations and get coordinates for them, we will not go into same depth. But we have to fix it. In our original approach the Python App was started with an Image from Docker Hub ([Official Python Image](https://hub.docker.com/\_/python))with supervisord running nginx and a wsgi server. The issues are actually pretty similar to those described in previous part.
+
+One possible solution is again to do a multi-stage build. Now you might say - wait a minute - Python is an interpreted language. Why is it necessary? It actually isn't a requirement but still seems reasonable to separate the installation of the dependencies and of a machine learning model from the Open Source library spaCy (see line 7) from Stage 2, where the application is started with the WSGI server Gunicorn. And again, in both stages, we build on a fully supported UBI with Python 3.9 installed.
 
 ```
 # Stage 1: package the app and dependencies in a venv
@@ -128,20 +130,8 @@ USER 1001
 CMD ["gunicorn", "--bind", "0.0.0.0:5000", "src.wsgi:app" ]
 ```
 
-### Feed-Scraper: Java
+### The other components: Quarkus & Java
 
+The other components were already working without any adjustments. Still, if we have a look at the Git Repo and the Dockerfiles for the news-backend component, a Quarkus application, and the feed-scraper component, a Java EE application, we discover that we can also leverage the UBI here e.g. by using [openjdk-11](https://catalog.redhat.com/software/containers/ubi8/openjdk-11/5dd6a4b45a13461646f677f4) or the [openjdk11-runtime](https://catalog.redhat.com/software/containers/ubi8/openjdk-11-runtime/606dcb7d0f75e8ece4deec1f).
 
-
-```
-# Stage 1: Build Application with Maven
-FROM registry.access.redhat.com/ubi8/openjdk-11 AS build
-WORKDIR /home/jboss
-COPY src /home/jboss/src
-COPY pom.xml /home/jboss
-RUN mvn -f /home/jboss/pom.xml clean package
-
-# Stage 2: Run with OpenJDK Runtime
-FROM registry.access.redhat.com/ubi8/openjdk-11-runtime
-COPY --from=build /home/jboss/target/feed-scraper-jar-with-dependencies.jar /usr/local/lib/feed-scraper.jar
-ENTRYPOINT ["java","-jar","/usr/local/lib/feed-scraper.jar"]
-```
+If we apply all the changes above to our images and configure our Helm Chart accordingly, we run on a Red Hat certified stack with all our application components. The next thing to look into is what changes the concept of OpenShift Routes compared to the Kubernetes Ingress resource mean for us.
