@@ -18,7 +18,9 @@ The above image provides a brief overview of the components. First of all, there
 
 ### GitHub
 
-[https://github.com/Apress/Kubernetes-Native-Development](https://github.com/Apress/Kubernetes-Native-Development)
+Original: [https://github.com/Apress/Kubernetes-Native-Development](https://github.com/Apress/Kubernetes-Native-Development)
+
+OpenShift tuned: [https://github.com/sa-mw-dach/local-news-shift/tree/openshift](https://github.com/sa-mw-dach/local-news-shift/tree/openshift)
 
 ### Container Registry
 
@@ -33,4 +35,4 @@ kubectl create ns localnews
 kubectl apply -f k8s/plain-manifests -n localnews
 ```
 
-But wait a minute - will it work like that if you are connected to an OpenShift cluster? As indicated above, we need to make some tweaks! Let's start with the building blocks of our application - the Container Images.&#x20;
+But wait a minute - will it work like that if you are connected to an OpenShift cluster? As indicated above, we need to make some tweaks! Let's start with the building blocks of our application - the Container Images and then tune the Helm Chart.&#x20;
