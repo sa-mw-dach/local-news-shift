@@ -11,6 +11,12 @@ oc apply -f snippets/chapter5/openshift/ACM-AppSets/acm-operator.yaml
 oc apply -f snippets/chapter5/openshift/ACM-AppSets/multiclusterhub.yaml
 ```
 
+Afterwards you will have one cluster, the local-cluster, visible in your ACM Dashboard. Or, as I did, you add a few more:
+
+![](<../.gitbook/assets/image (7).png>)
+
+
+
 Then we have to tell the ACM which GitOps installation it should use to roll out applications.
 
 ```
@@ -22,3 +28,4 @@ And, lastly, we roll out an ArgoCD Application Set, that creates an ArgoCD appli
 ```
 oc apply -f snippets/chapter5/openshift/ACM-AppSets/appset.yaml
 ```
+
