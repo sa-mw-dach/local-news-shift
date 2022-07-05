@@ -1,4 +1,4 @@
-# Don't ask why non-root but why root!
+# The least priviledge Principle
 
 The [`OpenShift documentation`](https://docs.openshift.com/container-platform/4.10/security/container\_security/security-hosts-vms.html) says:
 
@@ -20,14 +20,14 @@ That should deliver the result in the image.
 
 ![Helm Release in OCP v4.10](<../.gitbook/assets/image (4) (1).png>)
 
-Two components of our application are in a degraded state. Let's have a look with
+Two components of our application are in a degraded state. Let's have a look at it with the following command.
 
 ```
 oc get pods
 ```
 
-Two of our Pods are in "CrashLoopBackOff" state and if we look into the logs of these Pods we see a permission denied. They are running as root!
+Two of our Pods are in "CrashLoopBackOff" state and if we look into the logs of these Pods we see a permission denied error. This looks suspiciously like something related to root priviledges.
 
 ![](<../.gitbook/assets/image (5) (1).png>)
 
-Let's fix it by having a look at the Dockerfile.
+Let's investigate and fix it by having a look at the Dockerfile.
