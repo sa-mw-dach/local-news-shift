@@ -35,4 +35,4 @@ kubectl create ns localnews
 kubectl apply -f k8s/plain-manifests -n localnews
 ```
 
-But wait a minute - will it work like that if your kubeconfig points to an OpenShift cluster? As indicated above, we need to make some tweaks! Let's start with the building blocks of our application - the Container Images and the tuning of our Helm Chart.&#x20;
+But wait a minute - will it work like that if you are connected to an OpenShift cluster? As indicated above, we need to make some tweaks! Let's start with the building blocks of our application - the Container Images and then tune the Helm Chart.&#x20;
