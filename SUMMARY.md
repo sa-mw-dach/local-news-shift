@@ -6,6 +6,7 @@
 * [Run: Get your Angular, Python or Java Dockerfile ready with Red Hat's Universal Base Image](1-leverage-openshift-as-your-security-engine-and-easy-deployment/README.md)
   * [The least priviledge Principle](run-get-your-angular-python-or-java-dockerfile-ready-with-red-hats-universal-base-image/the-least-priviledge-principle.md)
   * [Adapting the Dockerfiles & Helm](1-leverage-openshift-as-your-security-engine-and-easy-deployment/adapting-the-dockerfiles.md)
+  * [Outlook](run-get-your-angular-python-or-java-dockerfile-ready-with-red-hats-universal-base-image/outlook.md)
 * [Develop: The Inner Loop with OpenShift Dev Spaces](3-use-openshift-in-the-inner-loop/README.md)
   * [What OpenShift expects!](3-use-openshift-in-the-inner-loop/what-openshift-expects.md)
   * [Who knows?](3-use-openshift-in-the-inner-loop/who-knows.md)

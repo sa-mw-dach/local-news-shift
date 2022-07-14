@@ -13,7 +13,7 @@ oc apply -f snippets/chapter5/openshift/ACM-AppSets/multiclusterhub.yaml
 
 Afterwards you will have one cluster, the local-cluster, visible in your ACM Dashboard. Or, as I did, you add a few more:
 
-![](<../.gitbook/assets/image (7).png>)
+![](<../.gitbook/assets/image (7) (1).png>)
 
 
 

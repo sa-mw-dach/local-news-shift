@@ -50,7 +50,7 @@ kubectl apply -n openshift-gitops -f snippets/chapter5/openshift/gitops/argocd-a
 
 But did it work? You could head over to the Dashboard now, which will tell you OutOfSync and you will see some permission errors. Guess what - Security Measures enforced by OpenShift! OpenShift GitOps needs explicit permissions to manage the Namespace "newsbackend-integration-gitops" which is used to deploy the application.
 
-![](<../.gitbook/assets/image (7) (1) (1).png>)
+![](<../.gitbook/assets/image (7) (1) (1) (1).png>)
 
 So, since OpenShift GitOps explicitly needs to be given access to a namespace that it is supposed to manage, just add a label to the respective namespace:
 
