@@ -160,4 +160,3 @@ We have seen that with the Red Hat certified Container Catalog, containing the d
 
 ![](<../.gitbook/assets/image (4).png>)
 
-This was the first part and it focussed solely on RUNNING our application. Stay tuned for the next 3 parts about developing, then building and finally delivering your application as an Operator with GitOps.

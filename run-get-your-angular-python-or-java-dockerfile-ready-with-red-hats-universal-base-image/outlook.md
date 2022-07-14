@@ -17,5 +17,7 @@ My application urgently needed:
 * a solution for an anomalous egress from my database
 * and a few more less severe things...
 
-You probably won't require a fix for all the issue right from development all the way to production. For instance, in development you might want to have some advanced debug options. But, if you really care about container security, do the homework that OpenShift gives you and, additionally, consult a tool such as ACM to help you run securely in production.
+You probably won't require a fix for all the issue right from development all the way to production. For instance, in development you might want to have some advanced debug options. But, if you really care about container security, do the homework that OpenShift gives you and, additionally, consult a tool such as ACM to help you run securely in production. [Here](https://www.opensourcerers.org/2022/03/21/security-aspects-with-openshift-an-overview/) is a good read and a good [view](https://www.youtube.com/watch?v=-OTEweJOjDw) to dive deeper on the topic.
+
+That concludes the first part and it focussed solely on RUNNING our application. Stay tuned for the next 3 parts about developing, then building and finally delivering your application as an Operator with GitOps.
 
