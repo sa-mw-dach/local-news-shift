@@ -1,6 +1,8 @@
 FROM registry.access.redhat.com/ubi8/python-39
 WORKDIR /app
 
+RUN pip install pip==22.2.2 setuptools==65.3.0
+
 # Install python packages
 COPY requirements.txt requirements.txt
 RUN pip3 install -r requirements.txt
@@ -19,6 +21,7 @@ ENV MODEL_NAME LocationExtractor
 ENV SERVICE_TYPE MODEL
 
 # Changing folder to default user
+USER root
 RUN chown -R 1001 /app
 
 USER 1001
