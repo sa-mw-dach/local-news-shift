@@ -11,7 +11,8 @@ class LocationExtractor:
         self.model = spacy.load('en_core_web_md')
 
     def predict(self, X, feature_names):
-        doc = self.model(X)
+        print(f'Received request with input X: {X}')
+        doc = self.model(X[0])
         print("Analyzing this text:" + doc.text, flush=True)
 
         locations = []

@@ -1,0 +1,21 @@
+apiVersion: machinelearning.seldon.io/v1
+kind: SeldonDeployment
+metadata:
+  name: location-extractor
+spec:
+  name: location-extractor
+  predictors:
+    - componentSpecs:
+        - spec:
+            containers:
+              - image: 'quay.io/mmurakam/location-extractor:v0.1.1'
+                name: location-extractor
+      graph:
+        children: []
+        name: location-extractor
+        type: MODEL
+        endpoint:
+            type: REST
+      name: location-extractor
+      replicas: 1
+      shadow: false
