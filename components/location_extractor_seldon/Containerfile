@@ -1,0 +1,26 @@
+FROM registry.access.redhat.com/ubi8/python-39
+WORKDIR /app
+
+# Install python packages
+COPY requirements.txt requirements.txt
+RUN pip3 install -r requirements.txt
+RUN python3 -m spacy download en_core_web_md
+
+# Copy source code
+COPY LocationExtractor.py .
+
+# Port for GRPC
+EXPOSE 5000
+# Port for REST
+EXPOSE 9000
+
+# Define environment variables
+ENV MODEL_NAME LocationExtractor
+ENV SERVICE_TYPE MODEL
+
+# Changing folder to default user
+RUN chown -R 1001 /app
+
+USER 1001
+
+CMD exec seldon-core-microservice $MODEL_NAME --service-type $SERVICE_TYPE
