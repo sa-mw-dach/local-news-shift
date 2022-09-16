@@ -15,17 +15,17 @@ class LocationExtractor:
         doc = self.model(str(X[0]))
         print("Analyzing this text:" + doc.text, flush=True)
 
-        locations = []
+        raw_locations = []
         if doc.ents:
             print("Found the following entities in this text:" + str(doc.ents), flush=True)
             for ent in doc.ents:
                 if ent.label_ == "GPE" or ent.label_ == "LOC":
-                    locations.append(ent.text)        
+                    raw_locations.append(ent.text)        
             locations = []
-            if locations:
-                print("Those entities were recognized as locations:" + str(locations), flush=True)
+            if raw_locations:
+                print("Those entities were recognized as locations:" + str(raw_locations), flush=True)
                 geolocator = Nominatim(user_agent="my_app")
-                for idx, location in enumerate(locations):
+                for idx, location in enumerate(raw_locations):
                     try:
                         loc = geolocator.geocode(location)
                         lat = loc.latitude
