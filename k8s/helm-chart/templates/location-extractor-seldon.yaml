@@ -8,14 +8,14 @@ spec:
     - componentSpecs:
         - spec:
             containers:
-              - image: 'quay.io/mmurakam/location-extractor:v0.1.1'
+              - image: 'quay.io/mmurakam/location-extractor:v0.1.5'
                 name: location-extractor
       graph:
         children: []
+        endpoint:
+          type: REST
         name: location-extractor
         type: MODEL
-        endpoint:
-            type: REST
       name: location-extractor
       replicas: 1
       shadow: false

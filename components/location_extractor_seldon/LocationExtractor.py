@@ -1,4 +1,3 @@
-import json
 import random
 
 from geopy.geocoders import Nominatim
@@ -63,11 +62,3 @@ class LocationExtractor:
             ]
 
         return locations
-
-if __name__ == "__main__":
-    p = LocationExtractor()
-    
-    X = 'My name is Clara and I live in Berkeley, California.'
-
-    prediction = p.predict(X, None)
-    print(prediction)

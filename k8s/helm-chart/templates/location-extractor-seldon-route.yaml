@@ -1,0 +1,14 @@
+kind: Route
+apiVersion: route.openshift.io/v1
+metadata:
+  name: location-extractor
+spec:
+  host: >-
+    location-extractor-localnews-demo.{{ .Values.localnews.domain }}
+  to:
+    kind: Service
+    name: location-extractor-seldon-location-extractor-location-extractor
+    weight: 100
+  port:
+    targetPort: http
+  wildcardPolicy: None
