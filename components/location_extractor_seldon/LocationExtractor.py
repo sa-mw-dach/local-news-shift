@@ -12,7 +12,7 @@ class LocationExtractor:
 
     def predict(self, X, feature_names):
         print(f'Received request with input X: {X}')
-        doc = self.model(X[0])
+        doc = self.model(str(X[0]))
         print("Analyzing this text:" + doc.text, flush=True)
 
         locations = []
