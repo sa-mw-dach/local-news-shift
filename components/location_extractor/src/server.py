@@ -3,6 +3,12 @@ import spacy
 from geopy.geocoders import Nominatim
 import json
 import random
+from prometheus_client import Counter, Info, generate_latest
+
+# Define metrics for Prometheus export
+COUNTER_LOCATIONS_EXTRACTED = Counter('locations_extracted', 'Number of extracted locations')
+INFO_LOCATION_EXTRACTOR = Info('location_extractor', 'Information regarding the location extractor')
+INFO_LOCATION_EXTRACTOR.info({'version': 'TODO_static_version_currently_TODO'})
 
 nlp_de = spacy.load('en_core_web_md')
 
@@ -35,6 +41,8 @@ def get_coords():
                     long = loc.longitude
                     locs_dict[idx+1] = {"extracted location": location, "generated address": loc.address, "latitude": lat - random.uniform(0.05, 2), "longitude": long + random.uniform(0.05, 2)}
                     print("found lat & long for this location: " + str(location), flush=True)
+                    # Increment metric for extracted locations
+                    COUNTER_LOCATIONS_EXTRACTED.inc(1)
                 except:
                     print("not found lat & long for this location:" + str(location), flush=True)
             jsonDict = json.dumps(locs_dict)
@@ -60,6 +68,11 @@ def get_coords():
                     }
 
     return jsonDict, 200, {'Content-Type': 'application/json; charset=utf-8'}
+
+# Expose metrics for Prometheus
+@app.route('/metrics')
+def metrics():
+    return generate_latest()
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
