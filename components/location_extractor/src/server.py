@@ -4,11 +4,13 @@ from geopy.geocoders import Nominatim
 import json
 import random
 from prometheus_client import Counter, Info, generate_latest
+import os
+import random
 
 # Define metrics for Prometheus export
 COUNTER_LOCATIONS_EXTRACTED = Counter('locations_extracted', 'Number of extracted locations')
 INFO_LOCATION_EXTRACTOR = Info('location_extractor', 'Information regarding the location extractor')
-INFO_LOCATION_EXTRACTOR.info({'version': 'TODO_static_version_currently_TODO'})
+INFO_LOCATION_EXTRACTOR.info({'version': str(os.getenv('LOC_EXT_VERSION'))})
 
 nlp_de = spacy.load('en_core_web_md')
 
@@ -35,6 +37,11 @@ def get_coords():
             print("Those entities were recognized as locations:" + str(locations), flush=True)
             geolocator = Nominatim(user_agent="my_app")
             for idx, location in enumerate(locations):
+                # Temporary hack to simulate a worse-performing model in case of version v2
+                if str(os.getenv('LOC_EXT_VERSION')) == 'v2-worse-performance':
+                    if random.randint(0,1) == 0:
+                        continue
+
                 try:
                     loc = geolocator.geocode(location)
                     lat = loc.latitude
