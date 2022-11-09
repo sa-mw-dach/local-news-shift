@@ -4,10 +4,8 @@
 
 localnews:
   imagePullPolicy: Always
-  # domain: your-cluster.domain ## take it from your browser, usually looks something like apps.ocp4.stormshift.coe.muc.redhat.com
-  # servicemesh: "off"
-  domain: apps.ocp4.stormshift.coe.muc.redhat.com
-  servicemesh: "on"
+  domain: your-cluster.domain ## take it from your browser, usually looks something like apps.ocp4.stormshift.coe.muc.redhat.com
+  servicemesh: "off"
   mesh:
     controlplane:
       name: "basic"
@@ -16,15 +14,14 @@ localnews:
       mtls: 
         strict: "off"
     locationExtractorSecondVersion:
-      name: "v2-worse-performance" # Set "off" for not deploying a 2nd version or "v2-worse-performance" # TODO Add "v2-seldon"
-      type: "mirror" # Option: 50/50, mirror
+      name: "off" # Set "off" for not deploying a 2nd version or "v2-worse-performance"
+      type: "50/50" # Option: 50/50, mirror
   sso:
     enabled: "off"
     namespacepostfix: "sso"
     client:
       secret: "ZHNnc0RHJT9zZGc/c0VUCg==" 
-  # workloadmonitoring: "off" # Currently only implemented for news-backend and location-extractor
-  workloadmonitoring: "on" # Currently only implemented for news-backend and location-extractor
+  workloadmonitoring: "off" # Currently only implemented for news-backend and location-extractor
 feedscraper:
   deployment: "on"
   name: feed-scraper
@@ -82,10 +79,8 @@ locationextractor:
   service: "on"
   name: location-extractor
   replicaCount: 1
-  # image: quay.io/k8snativedev/location_extractor
-  # imageTag: openshift
-  image: quay.io/manhah/location_extractor
-  imageTag: latest
+  image: quay.io/k8snativedev/location_extractor
+  imageTag: openshift
   ports:
     containerPort: 5000
     servicePort: 8081
