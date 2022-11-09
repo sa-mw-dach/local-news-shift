@@ -37,7 +37,7 @@ def get_coords():
             print("Those entities were recognized as locations:" + str(locations), flush=True)
             geolocator = Nominatim(user_agent="my_app")
             for idx, location in enumerate(locations):
-                # Temporary hack to simulate a worse-performing model in case of version v2
+                # Hack to simulate a worse-performing model in case of version v2
                 if str(os.getenv('LOC_EXT_VERSION')) == 'v2-worse-performance':
                     if random.randint(0,1) == 0:
                         continue
