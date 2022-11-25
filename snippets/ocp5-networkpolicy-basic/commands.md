@@ -22,3 +22,36 @@ You can, for example, try to access the news-backend from the new-frontend befor
     oc exec deployment/news-frontend -- curl news-backend:8080 
 
 
+## ACS Installation
+oc apply -f snippets/ocp5-networkpolicy-basic/subscription.yaml
+oc apply -f snippets/ocp5-networkpolicy-basic/clusterserviceversion.yaml
+oc apply -f snippets/ocp5-networkpolicy-basic/namespace.yaml
+oc apply -f snippets/ocp5-networkpolicy-basic/central.yaml
+
+## get password with username admin 
+oc -n stackrox get secret central-htpasswd -o go-template='{{index .data "password" | base64decode}}'
+
+## login at https url with admin user
+oc -n stackrox get route central -o jsonpath="{.status.ingress[0].host}"
+
+## install roxctl (on macOS - https://docs.openshift.com/acs/3.72/cli/getting-started-cli.html)
+curl -O https://mirror.openshift.com/pub/rhacs/assets/3.72.1/bin/Darwin/roxctl
+xattr -c roxctl
+chmod +x roxctl
+cp roxctl /usr/local/bin
+
+## authenticate roxctl
+# get it at https://<stackrox-domain>/main/integrations/authProviders/apitoken/create
+export ROX_API_TOKEN=**************
+export ROX_CENTRAL_ADDRESS=$(oc -n stackrox get route central -o jsonpath="{.status.ingress[0].host}")
+
+## generate an init bundle
+roxctl -e "https://($ROX_CENTRAL_ADDRESS):443" central init-bundles generate max-init-bundle --output-secrets cluster_init_bundle.yaml
+oc create -f cluster_init_bundle.yaml -n stackrox
+
+## register the acs hub cluster also as secured cluster
+oc apply -f securedcluster.yaml
+
+
+
+

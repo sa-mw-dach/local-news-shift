@@ -1,0 +1,9 @@
+kind: Project
+apiVersion: project.openshift.io/v1
+metadata:
+  name: stackrox
+spec:
+  finalizers:
+    - kubernetes
+status:
+  phase: Active
