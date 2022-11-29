@@ -34,8 +34,10 @@ We provide several tutorials for OpenShift features that can be demonstrated wit
 ### Tutorial 4: Enable OpenShift ServiceMesh
 [Deploy the application into the OpenShift service mesh](snippets/ocp4-mesh-basic/commands.md) and demonstrate additional observability and security.
 ### Tutorial 5: NetworkPolicies
-[Deploy the application with NetowrkPolicies in place](snippets/ocp5-networkpolicy-basic/commands.md) to restrict unnecessary communication paths between components.
-### Tutorial 6: Dark launches with ServiceMesh
+[Deploy the application with NetworkPolicies in place](snippets/ocp5-networkpolicy-basic/commands.md) to restrict unnecessary communication paths between components.
+### Tutorial 6: Deploy via Operator
+[Build a Helm-based operator for the application](snippets/ocp6-operator/commands.md) via OperatorSDK. Deploy it to OpenShift using the Operator Lifecycle Manager (OLM).
+### Tutorial 7: Dark launches with ServiceMesh
 TODO
-### Tutorial 7: Advanced routing with Seldon
+### Tutorial 8: Advanced routing with Seldon
 TODO
