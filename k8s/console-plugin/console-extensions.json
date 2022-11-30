@@ -1,0 +1,28 @@
+[
+   {
+    "type": "console.navigation/href",
+    "properties": {
+      "id": "statusview",
+      "name": "Status",
+      "href": "/status",
+      "perspective": "admin",
+      "section": "localnews"
+    }
+  },
+  {
+    "type": "console.page/route",
+    "properties": {
+      "exact": true,
+      "path": "/status",
+      "component": { "$codeRef": "Status" }
+    }
+  },
+  {
+    "type": "console.navigation/section",
+    "properties": {
+      "id": "localnews",
+      "name": "Local News",
+      "perspective": "admin"
+    }
+  }
+]
