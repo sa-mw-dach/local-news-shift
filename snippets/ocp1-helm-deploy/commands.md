@@ -2,7 +2,7 @@
 This tutorial describes how to deploy the local news application to OpenShift. This has been tested on OCP 4.10.
 
 ## Clone the repository
-    git clone https://github.com/Apress/Kubernetes-Native-Development
+    git clone https://github.com/sa-mw-dach/local-news-shift.git
 
 ## Create a new project
     OCP_PROJECT=localnews 
