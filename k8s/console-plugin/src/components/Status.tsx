@@ -3,14 +3,55 @@ import { ChartDonut } from '@patternfly/react-charts';
 import { TableComposable, Thead, Tr, Th, Tbody, Td } from '@patternfly/react-table';
 import * as React from 'react';
 import PlusCircleIcon from '@patternfly/react-icons/dist/esm/icons/cube-icon';
-import {useK8sWatchResource} from '@openshift-console/dynamic-plugin-sdk';
-//import { useK8sModel } from '@openshift-console/dynamic-plugin-sdk';
+import {useK8sWatchResource, K8sResourceCommon} from '@openshift-console/dynamic-plugin-sdk';
+import { k8sPatch, useK8sModel } from '@openshift-console/dynamic-plugin-sdk';
 
 export default function AcsView() {
   const [expanded, setExpanded] = React.useState(['ex2-toggle4']);
+  const [editDefaultFeedsClass, setEditDefaultFeedsClass] = React.useState(new Array<string>());
+  const [editFeedsUrlInput, setEditFeedsUrlInput] = React.useState(new Array<string>());
+  const [localNewsAppCrdModel] = useK8sModel({ group: 'kubdev.apress.com', version: 'v1alpha1', kind: 'LocalNewsApp' });
   let [metrics] = React.useState(new Array<Map<string, number>>());
   
-  const toggle = id => {
+  const toggleEditDefault = (index : number) => {
+    const updatedArray = editDefaultFeedsClass.map((c, i) => {
+      if(i == index) {
+        if (editDefaultFeedsClass[index] != null && editDefaultFeedsClass[index].length > 0) {
+          return "";
+        } else {
+          return "pf-m-inline-editable";
+        }
+      } else {
+        return c;
+      }
+    });
+    setEditDefaultFeedsClass(updatedArray);
+  }
+  
+  const saveChangesToDefaultFeedUrls = (resource : K8sResourceCommon, value: string) => {
+    console.log("Patch");
+    console.log(value);
+    k8sPatch({model: localNewsAppCrdModel, resource: resource, data: [{
+      op: "replace",
+      path: "/spec/feedscraper/envVars/feeds/value",
+      value: value
+    }]}).then(_ => {
+      console.log("Patched");
+    });
+  }
+  
+  const handleFeedUrlChange = (event : any, index: number) => {
+     const updatedArray = editDefaultFeedsClass.map((c, i) => {
+      if(i == index) {
+        return event.target.value;
+      } else {
+        return c;
+      }
+    });
+    setEditFeedsUrlInput(updatedArray);
+  }
+  
+  const toggle = (id : string) => {
     const index = expanded.indexOf(id);
     const newExpanded: string[] =
       index >= 0 ? [...expanded.slice(0, index), ...expanded.slice(index + 1, expanded.length)] : [...expanded, id];
@@ -81,11 +122,12 @@ export default function AcsView() {
     });
     
     
-    let crdNewsAppStatusOk = localNewsAppCrd != null ? localNewsAppCrd?.spec?.versions.map(t => t.name).join(", ") : 'not installed';
-    let crdfeedAnalysisStatusOk = feedAnalysisCrd != null ? feedAnalysisCrd?.spec?.versions.map(t => t.name).join(", ") : 'not installed';
-
+    let crdNewsAppStatusOk = localNewsAppCrd != null ? localNewsAppCrd?.spec?.versions.map((t : any) => t.name).join(", ") : 'not installed';
+    let crdfeedAnalysisStatusOk = feedAnalysisCrd != null ? feedAnalysisCrd?.spec?.versions.map((t : any) => t.name).join(", ") : 'not installed';
+   
+    localNewsApps[0].forEach(_ => editDefaultFeedsClass.push(""));
+    
     return (
-	       console.log(localNewsAppCrd),
         <React.Fragment>
         <Card>
             <CardHeader>
@@ -144,7 +186,7 @@ export default function AcsView() {
                                   <DataListCell key={index}>
                                     <span id="simple-item1"><a href={"/k8s/cluster/projects/" + comp.metadata.namespace}>{comp.metadata.namespace}</a></span>
                                   </DataListCell>,
-                                  <DataListCell key="secondary content">{comp.status?.conditions.filter(t => t.status == 'True').map(t => t.type).join(", ")}</DataListCell>,
+                                  <DataListCell key="secondary content">{comp.status?.conditions.filter((t : any) => t.status == 'True').map((t : any) => t.type).join(", ")}</DataListCell>,
                                   <DataListCell key="secondary content">{metrics[index]?.get("application_feedsAnalyzed")}</DataListCell>
                                 ]}
                               />
@@ -178,26 +220,84 @@ export default function AcsView() {
                                   width={300}
                                 />
                                 </div>
+                                <form className="pf-c-inline-edit" id="inline-edit-value-example">
                                <TableComposable aria-label="Sortable table">
                                   <Thead>
                                     <Tr>
                                       <Th width={50}>Scraper</Th>
-                                      <Th>URLs</Th>    
+                                      <Th>URLs</Th> 
+                                      <Th></Th>   
                                     </Tr>
                                   </Thead>
                                   <Tbody>
-                                      <Tr key="0">
+                                      <Tr key="0" className={editDefaultFeedsClass[index]} role="row">
                                         <Td>Default</Td>
-                                        <Td modifier="wrap">{comp.spec.feedscraper.envVars.feeds.value}</Td>                                 
+                                        <Td modifier="wrap">
+                                          <div className="pf-c-inline-edit__value"
+                                              id="single-inline-edit-example-label">{comp.spec.feedscraper.envVars.feeds.value}</div>
+                                          <div className="pf-c-inline-edit__input">
+                                            <textarea
+                                              className="pf-c-form-control"
+                                              defaultValue={comp.spec.feedscraper.envVars.feeds.value}
+                                              value={editFeedsUrlInput[index]}
+                                              onChange={(evt) => handleFeedUrlChange(evt, index)}
+                                              id="bulk-edit-table-example-row-1-text-input"
+                                              aria-label="Text input"
+                                            />
+                                          </div>
+                                        </Td>  
+                                        <Td>
+                                           <div
+                                            className="pf-c-inline-edit__group pf-m-action-group pf-m-icon-group"
+                                          >
+                                            <div className="pf-c-inline-edit__action pf-m-valid">
+                                              <button
+                                                className="pf-c-button pf-m-plain"
+                                                type="button"
+                                                aria-label="Save edits"
+                                                onClick={() => {saveChangesToDefaultFeedUrls(comp, editFeedsUrlInput[index]), toggleEditDefault(index)}}
+                                              >
+                                                <i className="fas fa-check" aria-hidden="true"></i>
+                                              </button>
+                                            </div>
+                                            <div className="pf-c-inline-edit__action">
+                                              <button
+                                                onClick={() => toggleEditDefault(index)}
+                                                className="pf-c-button pf-m-plain"
+                                                type="button"
+                                                aria-label="Cancel edits"
+                                              >
+                                                <i className="fas fa-times" aria-hidden="true"
+                                                  
+                                                ></i>
+                                              </button>
+                                            </div>
+                                          </div>
+                                          <div className="pf-c-inline-edit__action pf-m-enable-editable">
+                                            <button
+                                              onClick={() => toggleEditDefault(index)}
+                                              className="pf-c-button pf-m-plain"
+                                              type="button"
+                                              id="single-inline-edit-example-edit-button"
+                                              aria-label="Edit"
+                                              aria-labelledby="single-inline-edit-example-edit-button single-inline-edit-example-label"
+                                            >
+                                              <i className="fas fa-pencil-alt" aria-hidden="true"></i>
+                                            </button>
+                                          </div>
+                                         </Td>                               
                                       </Tr>
+                                      
                                     {feedscrapers[0].filter(s => s.metadata.namespace == comp.metadata.namespace).map((scraper, rowIndex) => (
-                                      <Tr key={rowIndex + 1}>
+                                      <Tr key={rowIndex + 1} role="row">
                                         <Td>{scraper.metadata.name}</Td>
-                                        <Td>{scraper?.spec.feedscraper.envVars.feeds.value}</Td>                                 
+                                        <Td>{scraper?.spec.feedscraper.envVars.feeds.value}</Td>      
+                                        <Td></Td>                           
                                       </Tr>
                                     ))}
                                   </Tbody>
                                 </TableComposable>
+                               </form>
                                {fetchMetrics(index, computeBackendUrl(comp))}
                               </p>
                             </DataListContent>
